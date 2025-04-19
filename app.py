@@ -102,7 +102,9 @@ class ModeloIA:
         if df.empty:
             self.entrenado = False
             return
-        X = self.mlb.fit_transform(df['productos'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else []))
+        X = self.mlb.fit_transform(
+    df['productos'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) and x.strip().startswith('[') else [])
+)
         y = df['aceptó_recomendación']
         self.model = RandomForestClassifier()
         self.model.fit(X, y)
