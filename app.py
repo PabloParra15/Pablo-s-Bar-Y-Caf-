@@ -2,8 +2,10 @@ import streamlit as st
 import pandas as pd
 import os
 import joblib
+import ast
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import MultiLabelBinarizer
+
 
 # --------------------- Productos ---------------------
 productos = [
@@ -100,7 +102,7 @@ class ModeloIA:
         if df.empty:
             self.entrenado = False
             return
-        X = self.mlb.fit_transform(df['productos'].apply(eval))
+        X = self.mlb.fit_transform(df['productos'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else []))
         y = df['aceptó_recomendación']
         self.model = RandomForestClassifier()
         self.model.fit(X, y)
